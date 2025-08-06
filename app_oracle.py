@@ -13,14 +13,10 @@ def inject_now():
     from datetime import datetime
     return {'now': datetime.utcnow}
 
-# Database Config
-username = 'SYSTEM'
-password = '2003'
-host = 'localhost'
-port = '1521'
-service = 'XEPDB1'
-app.config['SQLALCHEMY_DATABASE_URI'] = f'oracle+oracledb://{username}:{password}@{host}:{port}/?service_name={service}'
+# MySQL connection
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:wjOZAeZegGUyJkZNjPyhBwbzJDtEeSQy@turntable.proxy.rlwy.net:11741/railway'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
 # Models

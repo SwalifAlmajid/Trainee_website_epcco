@@ -14,7 +14,7 @@ def inject_now():
     return {'now': datetime.utcnow}
 
 # MySQL connection
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:mJetlYNMlVmozSDKPweLhnpgUCjNuOnC@shinkansen.proxy.rlwy.net:55281/railway'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:wjOZAeZegGUyJkZNjPyhBwbzJDtEeSQy@turntable.proxy.rlwy.net:11741/railway'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)

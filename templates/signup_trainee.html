@@ -57,8 +57,9 @@
             <select name="department" id="department" required
                     class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-700
                           focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-              {% for dept in departments %}
-                 <option value="" disabled selected>Select Department</option>
+                            <option value="" disabled selected>Select Department</option>
+
+                {% for dept in departments %}
                 <option value="{{ dept.id }}" {% if request.form.get('department') == dept.id|string %}selected{% endif %}>
                   {{ dept.name }}
                 </option>
