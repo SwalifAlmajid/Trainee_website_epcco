@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cupcake">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Choose Role - Eastern Province Cement Co.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/daisyui"></script>
+</head>
+<body class="bg-neutral-300 min-h-screen flex flex-col">
+
+  {% include 'header.html' %}
+
+  <main class="flex-grow flex items-center justify-center px-4 py-12">
+
+    <div class="bg-white border border-gray-300 rounded-lg shadow-lg p-8 w-full max-w-sm text-black text-center">
+
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="Company Logo"
+           class="mx-auto mb-6 w-48 h-auto" />
+
+      <h2 class="text-3xl font-bold text-[#0a1f44] mb-8">Sign Up As?</h2>
+
+      <div class="flex flex-col space-y-6">
+        <a href="/signup/admin"
+           class="w-full bg-[#0a1f44] hover:bg-[#122d65] text-white font-semibold py-3 rounded shadow transition duration-200">
+          Instructor
+        </a>
+
+        <a href="/signup/trainee"
+           class="w-full bg-[#0a1f44] hover:bg-[#122d65] text-white font-semibold py-3 rounded shadow transition duration-200">
+          Trainee
+        </a>
+      </div>
+
+      <p class="mt-8 text-gray-600">
+        Already have an account?
+        <a href="/login" class="text-[#0a1f44] font-semibold hover:underline">Log In</a>
+      </p>
+
+    </div>
+
+  </main>
+
+  {% include 'footer.html' %}
+
+</body>
+</html>

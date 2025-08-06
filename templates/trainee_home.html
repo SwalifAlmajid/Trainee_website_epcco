@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trainee Home - Eastern Province Cement Co.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-neutral-300 min-h-screen flex flex-col">
+
+  {% include 'header.html' %}
+
+  <div class="flex flex-1 overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-gray-100 text-black flex flex-col">
+      <div class="p-6 text-xl font-bold border-b border-[#122d65]">
+        Welcome, {{ user.username }}
+      </div>
+
+      <button id="btnSubmitReport" 
+        class="py-4 px-6 border-b border-[#122d65] text-left focus:outline-none 
+               bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition rounded-r-md">
+        Submit Report
+      </button>
+      <button id="btnViewReports" 
+        class="py-4 px-6 border-b border-[#122d65] text-left focus:outline-none 
+               bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition rounded-r-md">
+        View My Reports
+      </button>
+      <button id="btnCourseGuide" 
+        class="py-4 px-6 border-b border-[#122d65] text-left focus:outline-none 
+               bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition rounded-r-md">
+        Course Guide
+      </button>
+      <button id="btnProfile" 
+        class="py-4 px-6 text-left focus:outline-none 
+               bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition rounded-r-md">
+        Edit Profile
+      </button>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 bg-white p-8 overflow-auto min-h-0">
+      <h2 class="text-3xl font-bold mb-6 text-[#0a1f44]">
+        Role: <span class="capitalize">{{ session['role'] }}</span>
+      </h2>
+
+      <!-- Submit Report Panel -->
+      <section id="panelSubmitReport" class="space-y-6">
+        <h3 class="text-2xl font-semibold text-[#0a1f44] mb-4">Submit Report</h3>
+        <form id="submitReportForm" action="{{ url_for('submit_report') }}" method="POST" enctype="multipart/form-data" class="space-y-4 max-w-lg">
+          <div>
+            <label for="reportTitle" class="block mb-2 font-medium text-gray-700">Report Title:</label>
+            <input id="reportTitle" name="reportTitle" type="text" placeholder="Enter report title" required
+                   class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#122d65]" />
+          </div>
+
+          <div>
+            <label for="reportFile" class="block mb-2 font-medium text-gray-700">Upload Report File:</label>
+            <input id="reportFile" name="reportFile" type="file" required
+                   class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#122d65]" />
+          </div>
+
+          <button type="submit" class="px-6 py-2 bg-[#324968] text-white rounded hover:bg-[#3e5879] transition font-semibold">
+            Send
+          </button>
+        </form>
+      </section>
+
+      <!-- View Reports Panel -->
+      <section id="panelViewReports" class="hidden">
+        <h3 class="text-2xl font-semibold text-[#0a1f44] mb-4">My Reports</h3>
+        {% if reports %}
+        <table class="w-full border border-gray-300 rounded">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="border px-4 py-2 text-left">Title</th>
+              <th class="border px-4 py-2 text-center">Download</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for report in reports %}
+            <tr class="hover:bg-gray-50 transition">
+              <td class="border px-4 py-2">{{ report.title }}</td>
+              <td class="border px-4 py-2 text-center">
+                <a href="{{ url_for('download_report', report_id=report.id) }}"
+                   class="bg-[#324968] hover:bg-gray-700 text-white px-3 py-1 rounded transition font-semibold">
+                  Browse
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p>No reports found.</p>
+        {% endif %}
+      </section>
+
+      <!-- Course Guide Panel -->
+      <section id="panelCourseGuide" class="hidden">
+        <h3 class="text-2xl font-semibold text-[#0a1f44] mb-4">Course Guides</h3>
+        {% if course_guides %}
+        <ul class="list-disc list-inside space-y-2">
+          {% for guide in course_guides %}
+          <li>
+            <a href="{{ url_for('download_course_guide', guide_id=guide.id) }}" class="text-gray-700 hover:underline font-semibold" target="_blank">
+              {{ guide.title }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>No course guides available yet.</p>
+        {% endif %}
+      </section>
+
+      <!-- Profile Panel -->
+      <section id="panelProfile" class="hidden max-w-lg">
+        <h3 class="text-2xl font-semibold text-[#0a1f44] mb-4">My Profile</h3>
+        <form method="POST" action="{{ url_for('update_profile') }}" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Username</label>
+            <input type="text" value="{{ user.username }}" disabled
+                   class="mt-1 block w-full rounded-md bg-gray-100 border border-gray-300 px-3 py-2 text-gray-700 cursor-not-allowed" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Role</label>
+            <input type="text" value="{{ session['role'] | capitalize }}" disabled
+                   class="mt-1 block w-full rounded-md bg-gray-100 border border-gray-300 px-3 py-2 text-gray-700 cursor-not-allowed" />
+          </div>
+          <label class="block text-sm font-medium text-gray-700">Department</label>
+            <input type="text" value="{{ user.department.name if user.department else '—' }}" disabled
+                   class="mt-1 block w-full rounded-md bg-gray-100 border border-gray-300 px-3 py-2 text-gray-700 cursor-not-allowed" />
+          <div>
+            <label class="block text-sm font-medium text-gray-700" for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ user.email or '' }}"
+                   class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-700" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700" for="phone">Phone Number</label>
+            <input type="text" id="phone" name="phone" value="{{ user.phone or '' }}"
+                   class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-700" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700" for="university">University</label>
+            <input type="text" id="university" name="university" value="{{ user.university or '' }}"
+                   class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-700" />
+          </div>
+          <button type="submit" class="px-6 py-2 bg-[#324968] text-white rounded hover:bg-[#3e5879] transition font-semibold">
+            Save
+          </button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  {% include 'footer.html' %}
+
+  <script>
+    const btnSubmitReport = document.getElementById('btnSubmitReport');
+    const btnViewReports = document.getElementById('btnViewReports');
+    const btnCourseGuide = document.getElementById('btnCourseGuide');
+    const btnProfile = document.getElementById('btnProfile');
+
+    const panelSubmitReport = document.getElementById('panelSubmitReport');
+    const panelViewReports = document.getElementById('panelViewReports');
+    const panelCourseGuide = document.getElementById('panelCourseGuide');
+    const panelProfile = document.getElementById('panelProfile');
+
+    function hideAllPanels() {
+      panelSubmitReport.classList.add('hidden');
+      panelViewReports.classList.add('hidden');
+      panelCourseGuide.classList.add('hidden');
+      panelProfile.classList.add('hidden');
+    }
+
+    btnSubmitReport.addEventListener('click', () => {
+      hideAllPanels();
+      panelSubmitReport.classList.remove('hidden');
+    });
+
+    btnViewReports.addEventListener('click', () => {
+      hideAllPanels();
+      panelViewReports.classList.remove('hidden');
+    });
+
+    btnCourseGuide.addEventListener('click', () => {
+      hideAllPanels();
+      panelCourseGuide.classList.remove('hidden');
+    });
+
+    btnProfile.addEventListener('click', () => {
+      hideAllPanels();
+      panelProfile.classList.remove('hidden');
+    });
+
+    // Show submit report panel by default
+    hideAllPanels();
+    panelSubmitReport.classList.remove('hidden');
+  </script>
+
+</body>
+</html>

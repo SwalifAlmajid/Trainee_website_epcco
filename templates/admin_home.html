@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard - Eastern Province Cement Co.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+  {% include 'header.html' %}
+
+  <main class="flex-grow container mx-auto px-6 py-10 max-w-7xl">
+    <h1 class="text-3xl font-bold text-center text-[#324968] mb-8">Welcome, {{ user.username }}</h1>
+
+    <!-- Upload Guide Button -->
+    <div class="flex justify-center mb-10">
+      <a href="{{ url_for('course_guide_upload') }}"
+         class="inline-block bg-[#324968] hover:bg-[#3e5879] text-white font-semibold py-3 px-8 rounded-md shadow-sm transition duration-300">
+        Upload New Guide
+      </a>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <div class="bg-white shadow-sm border border-gray-200 rounded-lg p-6 text-center">
+        <p class="text-lg font-medium text-gray-600 mb-2">Total Trainees</p>
+        <p class="text-3xl text-[#324968] font-bold">{{ total_trainees }}</p>
+      </div>
+      <div class="bg-white shadow-sm border border-gray-200 rounded-lg p-6 text-center">
+        <p class="text-lg font-medium text-gray-600 mb-2">Trainees Without Reports</p>
+        <p class="text-3xl text-red-500 font-bold">{{ trainees_with_no_reports }}</p>
+      </div>
+      <div class="bg-white shadow-sm border border-gray-200 rounded-lg p-6 text-center">
+        <p class="text-lg font-medium text-gray-600 mb-2">Reports Submitted Today</p>
+        <p class="text-3xl text-green-500 font-bold">{{ reports_today }}</p>
+      </div>
+    </div>
+
+    <!-- Trainee Table -->
+    <section class="bg-white border border-gray-200 shadow-sm rounded-lg p-6 overflow-x-auto mb-10">
+      <h2 class="text-2xl font-semibold mb-6 text-[#324968]">Trainees in Your Department</h2>
+      <table class="w-full table-auto border-collapse text-left text-sm">
+        <thead>
+          <tr class="bg-gray-100 text-gray-700">
+            <th class="px-4 py-3 border border-gray-200">#</th>
+            <th class="px-4 py-3 border border-gray-200">Username</th>
+            <th class="px-4 py-3 border border-gray-200">Department</th>
+            <th class="px-4 py-3 border border-gray-200">University</th>
+            <th class="px-4 py-3 border border-gray-200">Created At</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for trainee in trainees %}
+          <tr class="hover:bg-gray-50 transition">
+            <td class="border border-gray-200 px-4 py-2">{{ loop.index }}</td>
+            <td class="border border-gray-200 px-4 py-2 font-medium">{{ trainee.username }}</td>
+            <td class="border border-gray-200 px-4 py-2">{{ trainee.department.name if trainee.department else '—' }}</td>
+            <td class="border border-gray-200 px-4 py-2">{{ trainee.university or '—' }}</td>
+            <td class="border border-gray-200 px-4 py-2">{{ trainee.created_at.strftime('%Y-%m-%d') if trainee.created_at else '—' }}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="5" class="border px-4 py-4 text-center text-gray-400">No trainees found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Reports Table -->
+    <section class="bg-white border border-gray-200 shadow-sm rounded-lg p-6 overflow-x-auto">
+      <h2 class="text-2xl font-semibold mb-6 text-[#324968]">Reports Submitted by Trainees</h2>
+      <table class="w-full table-auto border-collapse text-left text-sm">
+        <thead>
+          <tr class="bg-gray-100 text-gray-700">
+            <th class="px-4 py-3 border border-gray-200">#</th>
+            <th class="px-4 py-3 border border-gray-200">Report Title</th>
+            <th class="px-4 py-3 border border-gray-200">Trainee Username</th>
+            <th class="px-4 py-3 border border-gray-200">Submitted At</th>
+            <th class="px-4 py-3 border border-gray-200 text-center">Download</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for report in reports %}
+          <tr class="hover:bg-gray-50 transition">
+            <td class="border border-gray-200 px-4 py-2">{{ loop.index }}</td>
+            <td class="border border-gray-200 px-4 py-2 font-medium">{{ report.title }}</td>
+            <td class="border border-gray-200 px-4 py-2">{{ report.trainee.username }}</td>
+            <td class="border border-gray-200 px-4 py-2">{{ report.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td class="border border-gray-200 px-4 py-2 text-center">
+              <a href="{{ url_for('download_report', report_id=report.id) }}"
+                 class="text-[#324968] hover:underline font-semibold">Download</a>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="5" class="border px-4 py-4 text-center text-gray-400">No reports submitted yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+
+  {% include 'footer.html' %}
+</body>
+</html>
